@@ -10,16 +10,18 @@
 #include "Program6.h"
 #include <iostream>
 #include "cdk.h"
+#include <string>
+#include <sstream>
 #endif
 
 #define MATRIX_WIDTH 5
 #define MATRIX_HEIGHT 3
-#define BOX_WIDTH 15
+#define BOX_WIDTH 20
 #define MATRIX_NAME_STRING "Binary File Contents"
 
 using namespace std;
 
-int displayCDK()
+int displayCDK(BinaryFileHeader myRecord)
 {
   WINDOW	*window;
   CDKSCREEN	*cdkscreen;
@@ -65,13 +67,28 @@ int displayCDK()
   /* Display the Matrix */
   drawCDKMatrix(myMatrix, true);
 
+
   /*
    * Dipslay a message
    */
   //1st Row
-  setCDKMatrixCell(myMatrix, 1, 1, "Magic: ");
-  setCDKMatrixCell(myMatrix, 1, 2, "Version: ");
-  setCDKMatrixCell(myMatrix, 1, 3, "NumRecords: ");
+  stringstream stream;
+  stream << "Magic: 0x" << hex << uppercase <<  myRecord.magicNumber;
+  string result( stream.str() );
+  char const* s = result.c_str();
+  setCDKMatrixCell(myMatrix, 1, 1, s);
+  stream.str("");
+  
+  stream << "Version: " << myRecord.versionNumber;
+  result = stream.str();
+  s = result.c_str();
+  setCDKMatrixCell(myMatrix, 1, 2, s);
+  stream.str("");
+
+  stream << "NumRecords: " << myRecord.numRecords;
+  result = stream.str();
+  s = result.c_str();
+  setCDKMatrixCell(myMatrix, 1, 3, s);
   //print length of string and its value(s)
   setCDKMatrixCell(myMatrix, 2, 1, "strlen: ");
   setCDKMatrixCell(myMatrix, 2, 2, " ");
