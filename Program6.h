@@ -31,4 +31,4 @@ class BinaryFileRecord
   char stringBuffer[maxRecordStringLength];
 };
 
-int displayCDK(BinaryFileHeader);
+int displayCDK(BinaryFileHeader, BinaryFileRecord [], int);

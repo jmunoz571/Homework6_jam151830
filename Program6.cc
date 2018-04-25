@@ -21,7 +21,7 @@ int main()
 {
   //allocate memory for reading binary file
   BinaryFileHeader myRecord;
-  
+ 
   //create input file stream 
   ifstream binInfile ("cs3377.bin", ios::in | ios::binary);
   //check to see if file opened correctly
@@ -31,13 +31,22 @@ int main()
   }
 
   //read from input file 
-  binInfile.read( (char*) &myRecord, sizeof(BinaryFileRecord));
- 
+  binInfile.read( (char*) &myRecord, sizeof(BinaryFileHeader));
+  //store the number of records
+  int n = (int) myRecord.numRecords;
+  //create an array to store the data records
+  BinaryFileRecord dataRecords [n];
+
+  for( int i = 0 ; i < n; i++ ){
+    binInfile.read((char*)&dataRecords[i], sizeof(BinaryFileRecord));
+  }
+  
+  
   //Pass in value to CDK and display CDK matrix
-  displayCDK(myRecord);
+  displayCDK(myRecord, dataRecords, n);
   //Close files
   binInfile.close();
- 
+  
   return 0;
 }
 

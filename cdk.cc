@@ -21,7 +21,7 @@
 
 using namespace std;
 
-int displayCDK(BinaryFileHeader myRecord)
+int displayCDK(BinaryFileHeader myRecord, BinaryFileRecord dataRecords[], int n )
 {
   WINDOW	*window;
   CDKSCREEN	*cdkscreen;
@@ -72,27 +72,47 @@ int displayCDK(BinaryFileHeader myRecord)
    * Dipslay a message
    */
   //1st Row
+  
   stringstream stream;
+  string result = "";
+  char const* s;
+
   stream << "Magic: 0x" << hex << uppercase <<  myRecord.magicNumber;
-  string result( stream.str() );
-  char const* s = result.c_str();
+  result = stream.str();
+  s = result.c_str();
   setCDKMatrixCell(myMatrix, 1, 1, s);
   stream.str("");
   
-  stream << "Version: " << myRecord.versionNumber;
+  stream << "Version: " << dec << myRecord.versionNumber;
   result = stream.str();
   s = result.c_str();
   setCDKMatrixCell(myMatrix, 1, 2, s);
   stream.str("");
 
-  stream << "NumRecords: " << myRecord.numRecords;
+  stream << "NumRecords: " << dec << myRecord.numRecords;
   result = stream.str();
   s = result.c_str();
   setCDKMatrixCell(myMatrix, 1, 3, s);
-  //print length of string and its value(s)
-  setCDKMatrixCell(myMatrix, 2, 1, "strlen: ");
-  setCDKMatrixCell(myMatrix, 2, 2, " ");
-  
+
+  //display length of string and its value(s)  
+  int j = 2;
+  for(int i = 0; i < n ; i++)
+  {
+    if(j+1 > MATRIX_WIDTH)
+      break;
+    //clear stream
+    stream.str("");
+
+    //conver stringLength to string
+    stream << "strlen: " << dec <<(int) dataRecords[i].strLength;
+    result = stream.str();
+    s = result.c_str();
+    
+    //display content
+    setCDKMatrixCell(myMatrix, j+i, 1, s);
+    s = dataRecords[i].stringBuffer;
+    setCDKMatrixCell(myMatrix, j+i, 2, s);
+  }
 
   drawCDKMatrix(myMatrix, true);    /* required  */
 
